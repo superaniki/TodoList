@@ -31,8 +31,6 @@ mono_crash.*
 **/[Oo]bj/
 **/[Ll]og/
 **/[Ll]ogs/
-**/bin/
-
 
 # Visual Studio 2015/2017 cache/options directory
 **/.vs/
