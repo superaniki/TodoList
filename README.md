@@ -2,6 +2,10 @@
 
 Simple todo list manager
 
+This is a course assignment for development in C#.
+
+Description of the assignment below.
+
 # Project Brief
 
 Your task is to build a todo list application. The application will allow a user to create new tasks,

@@ -31,6 +31,27 @@ public class TaskManager
     }
     catch
     {
+      Console.ForegroundColor = ConsoleColor.Red;
+      Console.WriteLine("*** Task does not exist ***");
+      Console.ReadKey();
+      return false;
+    }
+
+    return true;
+  }
+
+  public bool ToggleTaskIsDone(int index)
+  {
+    try
+    {
+      tasks[index].IsDone = !tasks[index].IsDone;
+    }
+    catch
+    {
+      Console.ForegroundColor = ConsoleColor.Red;
+      Console.WriteLine("*** Task does not exist ***");
+      Console.ResetColor();
+      Console.ReadKey();
       return false;
     }
 

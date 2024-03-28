@@ -47,6 +47,8 @@ public class TodoList
       Console.WriteLine(task.Label.PadRight(20) + (task.IsDone ? "[X]" : "[ ]"));
       index++;
     }
+    Console.WriteLine("------------------------------------");
+
   }
 
   private void PrintTaskListForDisplay()
@@ -131,6 +133,33 @@ public class TodoList
     }
   }
 
+  private void MarkTaskAsDone()
+  {
+    while (true)
+    {
+      Console.Clear();
+      Console.ForegroundColor = ConsoleColor.Magenta;
+      PrintIndexedTaskList();
+      Console.WriteLine("Choose task to toggle Done/Not Done.(q to quit)\n");
+
+      var input = PromptInput().Trim().ToLower();
+      if (input == "q")
+        return;
+      var success = int.TryParse(input, out int number);
+      if (success)
+      {
+        taskManager.ToggleTaskIsDone(number - 1);
+      }
+      else
+      {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("*** Task does not exist ***");
+        Console.ResetColor();
+        Console.ReadKey();
+      }
+    }
+  }
+
   private void EditTasks()
   {
     while (true)
@@ -152,7 +181,7 @@ public class TodoList
       }
       if (taskCode == "2")
       {
-        //MarkTaskAsDone();
+        MarkTaskAsDone();
       }
       if (taskCode == "3")
       {
