@@ -2,6 +2,8 @@
 public class TodoList
 {
   TaskManager taskManager = new();
+  public string? FileName { set; get; }
+
 
   private void PrintMenu()
   {
@@ -261,8 +263,14 @@ public class TodoList
     return Command.None;
   }
 
+
+
+
   public void Start()
   {
+    if (FileName != null)
+      taskManager.LoadTasks(FileName);
+
     Command command = Command.None;
     do
     {
@@ -270,5 +278,8 @@ public class TodoList
       command = InputCommand();
       ExecuteCommand(command);
     } while (command != Command.SaveAndQuit);
+
+    if (FileName != null)
+      taskManager.SaveTasks(FileName);
   }
 }

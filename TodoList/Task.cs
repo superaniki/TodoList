@@ -10,4 +10,10 @@ public class Task
     Label = label;
     IsDone = false;
   }
+
+  public Task(string label, bool isDone)
+  {
+    Label = label;
+    IsDone = isDone;
+  }
 }
