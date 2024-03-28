@@ -92,7 +92,7 @@ public class TodoList
     }
   }
 
-  private void UpdateTask()
+  private void UpdateTasks()
   {
     Console.Clear();
     Console.WriteLine("Choose task to Update\n-------------");
@@ -133,7 +133,7 @@ public class TodoList
     }
   }
 
-  private void MarkTaskAsDone()
+  private void MarkTasksAsDone()
   {
     while (true)
     {
@@ -160,6 +160,34 @@ public class TodoList
     }
   }
 
+  private void RemoveTasks()
+  {
+    while (true)
+    {
+      Console.Clear();
+      Console.ForegroundColor = ConsoleColor.Magenta;
+      PrintIndexedTaskList();
+      Console.WriteLine("Choose task to Remove.(q to quit)\n");
+
+      var input = PromptInput().Trim().ToLower();
+      if (input == "q")
+        return;
+      var success = int.TryParse(input, out int number);
+      if (success)
+      {
+        taskManager.RemoveTask(number - 1);
+      }
+      else
+      {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("*** Task does not exist ***");
+        Console.ResetColor();
+        Console.ReadKey();
+      }
+    }
+  }
+
+
   private void EditTasks()
   {
     while (true)
@@ -177,15 +205,15 @@ public class TodoList
 
       if (taskCode == "1")
       {
-        UpdateTask();
+        UpdateTasks();
       }
       if (taskCode == "2")
       {
-        MarkTaskAsDone();
+        MarkTasksAsDone();
       }
       if (taskCode == "3")
       {
-        //RemoveTask();
+        RemoveTasks();
       }
       if (taskCode == "4")
       {

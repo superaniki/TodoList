@@ -8,6 +8,23 @@ public class TaskManager
     tasks.Add(newTask);
   }
 
+  public bool RemoveTask(int index)
+  {
+    try
+    {
+      tasks.RemoveAt(index);
+    }
+    catch
+    {
+      Console.ForegroundColor = ConsoleColor.Red;
+      Console.WriteLine("*** Task does not exist ***");
+      Console.ResetColor();
+      Console.ReadKey();
+      return false;
+    }
+    return true;
+  }
+
   public int NumberOfTasks()
   {
     return tasks.Count;
