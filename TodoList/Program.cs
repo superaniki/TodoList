@@ -2,5 +2,5 @@
 //using TaskUI;
 
 
-TodoList app = new TodoList();
+TodoList app = new();
 app.Start();
