@@ -40,6 +40,10 @@ namespace TodoList
 
         private void RenameTask(int index)
         {
+            if (TaskManager == null)
+            {
+                throw new NullReferenceException("Taskmanager is not initialised");
+            }
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Enter a new name for \"{TaskManager.GetTaskList().ElementAt(index - 1).Label}\"");
