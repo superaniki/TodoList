@@ -36,20 +36,24 @@ public class TaskManager
     tasks.Add(newTask);
   }
 
-  public void SaveTasks(string fileName)
+  public bool SaveTasks(string fileName)
   {
-
-    StreamWriter writer = new(fileName);
-    foreach (Task task in tasks)
+    try
     {
-      writer.WriteLine(task.Label);
-      writer.WriteLine(task.IsDone ? "1" : "0");
+      StreamWriter writer = new(fileName);
+      foreach (Task task in tasks)
+      {
+        writer.WriteLine(task.Label);
+        writer.WriteLine(task.IsDone ? "1" : "0");
+      }
+
+      writer.Close();
     }
-
-    writer.Close();
-
-    Console.ForegroundColor = ConsoleColor.Green;
-    Console.WriteLine($"Tasks saved successfully to file \"{fileName}\".");
+    catch
+    {
+      return false;
+    }
+    return true;
   }
 
   public void AddTasks(List<string> taskLines)
@@ -63,6 +67,20 @@ public class TaskManager
     }
   }
 
+  public bool GetTask(int index, out Task? task)
+  {
+    try
+    {
+      task = tasks.ElementAt(index);
+      return true;
+    }
+    catch
+    {
+      task = null;
+      return false;
+    }
+  }
+
   public bool RemoveTask(int index)
   {
     try
@@ -71,10 +89,6 @@ public class TaskManager
     }
     catch
     {
-      Console.ForegroundColor = ConsoleColor.Red;
-      Console.WriteLine("*** Task does not exist ***");
-      Console.ResetColor();
-      Console.ReadKey();
       return false;
     }
     return true;
@@ -95,6 +109,18 @@ public class TaskManager
     return tasks.AsReadOnly();
   }
 
+  public string? GetTaskNameAtIndex(int index)
+  {
+    try
+    {
+      return tasks[index].Label;
+    }
+    catch
+    {
+      return "";
+    }
+  }
+
   public bool UpdateTask(int index, string newName)
   {
     try
@@ -103,9 +129,6 @@ public class TaskManager
     }
     catch
     {
-      Console.ForegroundColor = ConsoleColor.Red;
-      Console.WriteLine("*** Task does not exist ***");
-      Console.ReadKey();
       return false;
     }
 
@@ -120,10 +143,6 @@ public class TaskManager
     }
     catch
     {
-      Console.ForegroundColor = ConsoleColor.Red;
-      Console.WriteLine("*** Task does not exist ***");
-      Console.ResetColor();
-      Console.ReadKey();
       return false;
     }
 
