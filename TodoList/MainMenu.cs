@@ -33,7 +33,7 @@ namespace TodoList
             {
                 case "1":
                     PrintTaskListForDisplay();
-                    WaitForAnyKey("Press any key to close");
+                    //WaitForAnyKey("Press any key to close");
                     break;
                 case "2":
                     AddTasks();
@@ -50,9 +50,49 @@ namespace TodoList
 
         private void PrintTaskListForDisplay()
         {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            PrintTaskList();
+            do
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                PrintTaskList();
+            } while (SortOrderInput());
+        }
+
+
+        string UnderlinedString(string inputString)
+        {
+            return $"{AnsiColors.UnderLined}{inputString}{AnsiColors.ResetDecorations}";
+        }
+
+        private bool SortOrderInput()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            var projectString = TaskSortOrder == SortOrder.Project ? UnderlinedString("Project") : "Project";
+            var dueDateString = TaskSortOrder == SortOrder.DueDate ? UnderlinedString("Due Date") : "Due Date";
+            Console.CursorVisible = false;
+            Console.Write($"Press {AnsiColors.LightBlue}(p){AnsiColors.DarkGrey} to sort by {projectString}, ");
+            Console.Write($"{AnsiColors.LightBlue}(d){AnsiColors.DarkGrey} to sort by {dueDateString},");
+            Console.Write($"{AnsiColors.LightBlue}(enter){AnsiColors.DarkGrey} to quit >");
+
+            var key = Console.ReadKey().Key;
+            //var keyString = key.Key;
+            Console.CursorVisible = true;
+
+
+            switch (key)
+            {
+                case ConsoleKey.P:
+                    TaskSortOrder = SortOrder.Project;
+                    break;
+                case ConsoleKey.D:
+                    TaskSortOrder = SortOrder.DueDate;
+                    break;
+                case ConsoleKey.Enter:
+                    return false;
+
+            };
+            Console.CursorVisible = true;
+            return true;
         }
 
         private void AddTasks()

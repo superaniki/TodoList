@@ -4,9 +4,10 @@ namespace TodoList
     {
         public enum SortOrder
         {
-            Group,
+            Project,
             DueDate
         }
+        protected SortOrder TaskSortOrder { set; get; } = SortOrder.DueDate;
         public TaskManager? TaskManager { set; get; } = null;
 
         public abstract void PrintMenu();
@@ -115,7 +116,16 @@ namespace TodoList
             PrintHorizontalLine();
 
             int index = 1;
-            foreach (Task task in tasks)
+            Task[] orderedTasks;
+            if (TaskSortOrder == SortOrder.DueDate)
+                orderedTasks = [.. tasks.OrderByDescending(asset => asset.DueDate)];
+            else
+            {
+                orderedTasks = [.. tasks.OrderBy(asset => asset.Project)];
+            }
+
+
+            foreach (Task task in orderedTasks)
             {
                 if (useIndex)
                 {
