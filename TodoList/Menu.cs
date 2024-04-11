@@ -2,6 +2,11 @@ namespace TodoList
 {
     public abstract class Menu
     {
+        public enum SortOrder
+        {
+            Group,
+            DueDate
+        }
         public TaskManager? TaskManager { set; get; } = null;
 
         public abstract void PrintMenu();
@@ -21,6 +26,50 @@ namespace TodoList
             return input;
         }
 
+        protected static bool DateInput(string taskName, out DateTime dueDate)
+        {
+            while (true)
+            {
+                string? input = PromptInput(taskName);
+
+                if (input != null)
+                {
+                    if (input.Trim() == "q")
+                    {
+                        dueDate = new();
+                        return false;
+                    }
+                    else if (input.Trim() != "" && DateTime.TryParse(input, out DateTime date))
+                    {
+                        dueDate = date;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        protected static bool StringInput(string taskName, out string data)
+        {
+            while (true)
+            {
+                string? input = PromptInput(taskName);
+
+                if (input != null)
+                {
+                    if (input.Trim() == "q")
+                    {
+                        data = "";
+                        return false;
+                    }
+                    else if (input.Trim() != "")
+                    {
+                        data = input;
+                        return true;
+                    }
+                }
+            }
+        }
+
         protected static void WaitForAnyKey(string message = "Press any key", ConsoleColor color = ConsoleColor.Blue)
         {
             Console.ForegroundColor = color;
@@ -30,7 +79,30 @@ namespace TodoList
             Console.CursorVisible = true;
         }
 
-        protected void PrintTaskList(bool useIndex = false)
+        private void PrintRow(String[] data, int padding = 20, bool useCheckMark = false, bool checkMark = false, ConsoleColor foregroundColor = ConsoleColor.White)
+        {
+            Console.ForegroundColor = foregroundColor;
+            foreach (string label in data)
+            {
+                Console.Write(label.PadRight(padding));
+            }
+            if (useCheckMark)
+            {
+                Console.Write("[");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(checkMark ? "X" : " ");
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.Write("]");
+            }
+            Console.Write("\n");
+        }
+
+        private void PrintHorizontalLine()
+        {
+            Console.WriteLine("------------------------------------------------------------------------------");
+        }
+
+        protected void PrintTaskList(bool useIndex = false, SortOrder sortBy = SortOrder.DueDate)
         {
             if (TaskManager == null)
             {
@@ -39,26 +111,23 @@ namespace TodoList
 
             var tasks = TaskManager.GetTaskList();
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Name".PadRight(20) + "Is done");
-            Console.WriteLine("------------------------------------");
-            Console.ForegroundColor = ConsoleColor.Magenta;
+            PrintRow(["Name", "Project", "Due Date", "Is Done"], 20);
+            PrintHorizontalLine();
 
             int index = 1;
             foreach (Task task in tasks)
             {
                 if (useIndex)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.Write(index + ") ");
-                Console.Write(task.Label.PadRight(20));
-                Console.Write("[");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write(task.IsDone ? "X" : " ");
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine("]");
+                }
 
+                PrintRow([task.Label, task.Project, task.DueDate.ToShortDateString()], 20, true, task.IsDone, ConsoleColor.Magenta);
                 index++;
             }
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("------------------------------------");
+            PrintHorizontalLine();
         }
 
         public static void PrintErrorMessage(string message, bool useKeyWait = true)

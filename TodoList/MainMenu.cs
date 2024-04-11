@@ -1,4 +1,6 @@
 
+using System.Text.Json.Nodes;
+
 namespace TodoList
 {
     public class MainMenu : Menu
@@ -9,7 +11,6 @@ namespace TodoList
             {
                 throw new NullReferenceException("Taskmanager is not initialised");
             }
-
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Welcome to Todoly");
@@ -61,32 +62,27 @@ namespace TodoList
                 throw new NullReferenceException("Taskmanager is not initialised");
             }
 
-            var addAnotherTask = true;
-            while (addAnotherTask)
+            while (true)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("Add new task (q to exit)\n--------------------------\n");
 
                 Console.ForegroundColor = ConsoleColor.White;
-                string? taskName = PromptInput("Name");
+                if (!StringInput("Name", out string taskName))
+                    break;
+                if (!StringInput("Project", out string projectName))
+                    break;
+                if (!DateInput("DueDate", out DateTime dueDate))
+                    break;
 
-                if (taskName != null)
-                {
-                    if (taskName.Trim() == "q")
-                    {
-                        addAnotherTask = false;
-                    }
-                    else if (taskName.Trim() != "")
-                    {
-                        TaskManager.AddTask(taskName);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Task '{taskName}' Added!");
-                        WaitForAnyKey("Press any key to enter a new task");
-                    }
-                }
+                TaskManager.AddTask(taskName, projectName, dueDate);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Task '{taskName}' Added!");
+                WaitForAnyKey("Press any key to enter a new task");
+
             }
         }
-
     }
+
 }

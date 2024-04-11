@@ -1,3 +1,5 @@
+using TodoList;
+
 public class TaskManager
 {
   private List<Task> tasks = [];
@@ -6,7 +8,7 @@ public class TaskManager
   {
     try
     {
-      using (StreamReader reader = new StreamReader(filename))
+      using (StreamReader reader = new(filename))
       {
         string? line;
         while ((line = reader.ReadLine()) != null)
@@ -18,6 +20,7 @@ public class TaskManager
     }
     catch
     {
+      Menu.PrintErrorMessage("Error reading from file : IO error");
       return false;
     }
   }
@@ -30,9 +33,9 @@ public class TaskManager
     AddTasks(loadedData);
   }
 
-  public void AddTask(string label)
+  public void AddTask(string label, string projectName, DateTime dueDate)
   {
-    Task newTask = new(label);
+    Task newTask = new(label, projectName, dueDate);
     tasks.Add(newTask);
   }
 
@@ -45,6 +48,8 @@ public class TaskManager
       {
         writer.WriteLine(task.Label);
         writer.WriteLine(task.IsDone ? "1" : "0");
+        writer.WriteLine(task.Project);
+        writer.WriteLine(task.DueDate.ToShortDateString());
       }
 
       writer.Close();
@@ -56,15 +61,29 @@ public class TaskManager
     return true;
   }
 
-  public void AddTasks(List<string> taskLines)
+  public bool AddTasks(List<string> taskLines)
   {
-    for (int index = 0; index + 1 <= taskLines.Count; index += 2)
+    for (int index = 0; index + 1 <= taskLines.Count; index += 4)
     {
-      string label = taskLines.ElementAt(index);
-      bool isDone = taskLines.ElementAt(index + 1) == "1";
-      Task newTask = new(label, isDone);
-      tasks.Add(newTask);
+      try
+      {
+        string label = taskLines.ElementAt(index);
+        bool isDone = taskLines.ElementAt(index + 1) == "1";
+        string project = taskLines.ElementAt(index + 2);
+        string dateString = taskLines.ElementAt(index + 3);
+        if (!DateTime.TryParse(dateString, out DateTime dueDate))
+        {
+          throw new Exception();
+        }
+        tasks.Add(new(label, project, dueDate, isDone));
+      }
+      catch (Exception)
+      {
+        Menu.PrintErrorMessage("Error reading from file : wrong format");
+        return false;
+      }
     }
+    return true;
   }
 
   public bool GetTask(int index, out Task? task)
