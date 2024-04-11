@@ -140,11 +140,16 @@ public class TaskManager
     }
   }
 
-  public bool UpdateTask(int index, string newName)
+  public bool UpdateTask(int index, string newName, string newProject, DateTime? newDueDate)
   {
     try
     {
-      tasks[index].Label = newName;
+      if (newName != "")
+        tasks[index].Label = newName;
+      if (newProject != "")
+        tasks[index].Project = newProject;
+      if (newDueDate != null)
+        tasks[index].DueDate = (DateTime)newDueDate;
     }
     catch
     {

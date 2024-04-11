@@ -45,24 +45,52 @@ namespace TodoList
                 throw new NullReferenceException("Taskmanager is not initialised");
             }
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Update task \"{TaskManager.GetTaskList().ElementAt(index - 1).Label}\" (enter to skip)");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"Enter a new name for \"{TaskManager.GetTaskList().ElementAt(index - 1).Label}\"");
-            Console.WriteLine("-----------------------");
+            Console.WriteLine("----------------------------------------");
 
-            string newName = "";
-            while (newName == "")
+            Console.Write($"Name > ");
+            var newName = Console.ReadLine();
+            Console.Write($"Project > ");
+            var newProject = Console.ReadLine();
+            DateTime? newDueDate = null;
+            while (true)
             {
-                newName = PromptInput();
-                bool updateSuccess = TaskManager.UpdateTask(index - 1, newName);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write($"Due Date >");
+                var newDueDateString = Console.ReadLine();
+                if (DateTime.TryParse(newDueDateString, out var parsedDueDate))
+                {
+                    newDueDate = parsedDueDate;
+                    break;
+                }
+                else if (newDueDateString == "")
+                    break;
+                else
+                {
+                    PrintErrorMessage("Error : Wrong format", false);
+                }
+            }
+
+            if (newName != "" || newProject != "" || newDueDate != null)
+            {
+                bool updateSuccess = TaskManager.UpdateTask(index - 1, newName, newProject, newDueDate);
                 if (!updateSuccess)
                 {
                     PrintErrorMessage("Failed to update task");
                 }
                 else
                 {
-                    PrintSuccessMessage("Task renamed");
+
+                    PrintSuccessMessage("Task updated");
                 }
             }
+            else
+            {
+                PrintMessage("Skipping task update");
+            }
+
         }
 
         private void EditTask(string taskDescription, Command command)

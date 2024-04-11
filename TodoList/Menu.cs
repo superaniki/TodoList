@@ -4,6 +4,7 @@ namespace TodoList
     {
         public enum SortOrder
         {
+            None,
             Project,
             DueDate
         }
@@ -103,7 +104,7 @@ namespace TodoList
             Console.WriteLine("------------------------------------------------------------------------------");
         }
 
-        protected void PrintTaskList(bool useIndex = false, SortOrder sortBy = SortOrder.DueDate)
+        protected void PrintTaskList(bool useIndex = false, SortOrder sortBy = SortOrder.None)
         {
             if (TaskManager == null)
             {
@@ -117,11 +118,15 @@ namespace TodoList
 
             int index = 1;
             Task[] orderedTasks;
-            if (TaskSortOrder == SortOrder.DueDate)
+            if (sortBy == SortOrder.DueDate)
                 orderedTasks = [.. tasks.OrderByDescending(asset => asset.DueDate)];
-            else
+            else if (TaskSortOrder == SortOrder.Project)
             {
                 orderedTasks = [.. tasks.OrderBy(asset => asset.Project)];
+            }
+            else
+            {
+                orderedTasks = tasks.ToArray();
             }
 
 
@@ -151,6 +156,14 @@ namespace TodoList
         public static void PrintSuccessMessage(string message, bool useKeyWait = true)
         {
             Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("*** " + message + " ***");
+            if (useKeyWait)
+                WaitForAnyKey();
+        }
+
+        public static void PrintMessage(string message, bool useKeyWait = true)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("*** " + message + " ***");
             if (useKeyWait)
                 WaitForAnyKey();

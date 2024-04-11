@@ -54,7 +54,7 @@ namespace TodoList
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                PrintTaskList();
+                PrintTaskList(false, TaskSortOrder);
             } while (SortOrderInput());
         }
 
@@ -75,9 +75,7 @@ namespace TodoList
             Console.Write($"{AnsiColors.LightBlue}(enter){AnsiColors.DarkGrey} to quit >");
 
             var key = Console.ReadKey().Key;
-            //var keyString = key.Key;
             Console.CursorVisible = true;
-
 
             switch (key)
             {
