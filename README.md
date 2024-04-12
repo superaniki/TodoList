@@ -1,12 +1,20 @@
 # TodoList
 
 Simple todo list manager
+This is a course assignment for development in C# as a console application.
+The application is pretty much self explanatory as you run it.
+Tasks are loaded and saved as you start and exit the explanation.
 
-This is a course assignment for development in C#.
 
-Description of the assignment below.
+# Features:
+Add task
+remove task
+mark as done
+save/load 
+etc.
 
-# Project Brief
+
+# Description of the assignment below.
 
 Your task is to build a todo list application. The application will allow a user to create new tasks,
 assign them a title and due date, and choose a project for that task to belong to. They will need
@@ -14,6 +22,7 @@ to use a text based user interface via the command-line. Once they are using the
 the user should be able to also edit, mark as done or remove tasks. They can also quit and save
 the current task list to file, and then restart the application with the former state restored. The
 interface should look similar to the mockup below:
+
 
 # Requirements
 
